@@ -2,10 +2,15 @@ import { useState } from "react";
 import CustomTable from "../components/Table/Table";
 import { formatDate, padNumber } from "../components/Table/utils";
 import "./Products.css";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Products() {
   const rowsPerPage = 10;
   const [tablePage, setTablePage] = useState(1);
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+
   const [tableOrder, setTableOrder] = useState({
     order: "asc",
     orderBy: "createdAt",
@@ -25,7 +30,7 @@ function Products() {
       numeric: false,
       disablePadding: false,
       label: "Product Name",
-      sortable: true,
+      sortable: false,
     },
     {
       id: "price",
@@ -49,8 +54,25 @@ function Products() {
       numeric: false,
       disablePadding: false,
       label: "Created At",
-      sortable: false,
+      sortable: true,
       render: (text: any) => formatDate(text),
+    },
+    {
+      id: "actions",
+      numeric: false,
+      disablePadding: false,
+      label: "Actions",
+      sortable: false,
+      render: (text: any, row: any) => (
+        <Button
+          variant="outlined"
+          onClick={() => {
+            navigate(`/${row.id}`);
+          }}
+        >
+          Edit
+        </Button>
+      ),
     },
   ];
 
@@ -64,7 +86,7 @@ function Products() {
       createdAt: new Date(),
     },
     {
-      id: "1",
+      id: "2",
       name: "Test123",
       price: "1204",
       image:
@@ -82,23 +104,41 @@ function Products() {
   };
 
   return (
-    <CustomTable
-      tableHeader={tableHeader}
-      tableData={tableData}
-      totalRecords={tableData.length}
-      sortingRequired={true}
-      paginationServerSide={true}
-      page={tablePage}
-      rowsPerPage={rowsPerPage}
-      onPageChange={handlePageChange}
-      sortingServerSide={true}
-      order={tableOrder.order}
-      orderBy={tableOrder.orderBy}
-      onSortChange={handleSortChange}
-      rowclickable={false}
-      isLoading={false}
-      paginationRequired={true}
-    />
+    <div>
+      <div className="form-fieldset search-product-wrapper">
+        <input
+          placeholder="Enter Product Name"
+          className="form-input search-product"
+          id="productName"
+          type="text"
+          name="productName"
+          value={search}
+          onChange={(e: any) => {
+            setSearch(e.target.value);
+          }}
+        />
+        <Button variant="outlined" onClick={() => {}}>
+          Search
+        </Button>
+      </div>
+      <CustomTable
+        tableHeader={tableHeader}
+        tableData={tableData}
+        totalRecords={tableData.length}
+        sortingRequired={true}
+        paginationServerSide={true}
+        page={tablePage}
+        rowsPerPage={rowsPerPage}
+        onPageChange={handlePageChange}
+        sortingServerSide={true}
+        order={tableOrder.order}
+        orderBy={tableOrder.orderBy}
+        onSortChange={handleSortChange}
+        rowclickable={false}
+        isLoading={false}
+        paginationRequired={true}
+      />
+    </div>
   );
 }
 

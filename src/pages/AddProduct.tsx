@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./AddProducts.css";
 import { Alert, AlertColor } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 const AddProduct = () => {
   const initialState = {
@@ -11,6 +12,9 @@ const AddProduct = () => {
 
   const [formData, setFormData] = useState(initialState);
   const [error, setError] = useState<any>(null);
+  const params = useParams();
+  const { id: productId } = params;
+
   const [showAlert, setShowAlert] = useState<{
     message: string;
     type: AlertColor | undefined;
@@ -116,7 +120,7 @@ const AddProduct = () => {
           {showAlert.message}
         </Alert>
       )}
-      <h2>Add Product</h2>
+      <h2>{productId ? "Edit Product" : "Add Product"}</h2>
       <form>
         <div className="form-fieldset">
           <label className="form-label" htmlFor="productName">
